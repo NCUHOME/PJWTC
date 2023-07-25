@@ -8,6 +8,6 @@ var (
 
 func init() {
 	if Addr == "" {
-		Addr = "jwt-grpc.passport"
+		Addr = "jwt-grpc.passport:80"
 	}
 }
