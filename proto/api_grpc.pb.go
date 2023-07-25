@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PassportClient interface {
-	ParseJwt(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Result, error)
+	ParseJwt(ctx context.Context, in *RequestParseJwt, opts ...grpc.CallOption) (*ParseJwtResult, error)
 }
 
 type passportClient struct {
@@ -37,8 +37,8 @@ func NewPassportClient(cc grpc.ClientConnInterface) PassportClient {
 	return &passportClient{cc}
 }
 
-func (c *passportClient) ParseJwt(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Result, error) {
-	out := new(Result)
+func (c *passportClient) ParseJwt(ctx context.Context, in *RequestParseJwt, opts ...grpc.CallOption) (*ParseJwtResult, error) {
+	out := new(ParseJwtResult)
 	err := c.cc.Invoke(ctx, Passport_ParseJwt_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (c *passportClient) ParseJwt(ctx context.Context, in *Request, opts ...grpc
 // All implementations must embed UnimplementedPassportServer
 // for forward compatibility
 type PassportServer interface {
-	ParseJwt(context.Context, *Request) (*Result, error)
+	ParseJwt(context.Context, *RequestParseJwt) (*ParseJwtResult, error)
 	mustEmbedUnimplementedPassportServer()
 }
 
@@ -58,7 +58,7 @@ type PassportServer interface {
 type UnimplementedPassportServer struct {
 }
 
-func (UnimplementedPassportServer) ParseJwt(context.Context, *Request) (*Result, error) {
+func (UnimplementedPassportServer) ParseJwt(context.Context, *RequestParseJwt) (*ParseJwtResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseJwt not implemented")
 }
 func (UnimplementedPassportServer) mustEmbedUnimplementedPassportServer() {}
@@ -75,7 +75,7 @@ func RegisterPassportServer(s grpc.ServiceRegistrar, srv PassportServer) {
 }
 
 func _Passport_ParseJwt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+	in := new(RequestParseJwt)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func _Passport_ParseJwt_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: Passport_ParseJwt_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PassportServer).ParseJwt(ctx, req.(*Request))
+		return srv.(PassportServer).ParseJwt(ctx, req.(*RequestParseJwt))
 	}
 	return interceptor(ctx, in, info, handler)
 }

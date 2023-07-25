@@ -5,14 +5,14 @@ package proto;
 option go_package = "./proto";
 
 service Passport {
-  rpc ParseJwt(Request) returns (Result) {}
+  rpc ParseJwt(RequestParseJwt) returns (ParseJwtResult) {}
 }
 
-message Request {
+message RequestParseJwt {
   string token = 1;
 }
 
-message Result {
+message ParseJwtResult {
   Claims claims = 1;
   bool Valid = 2;
 }
