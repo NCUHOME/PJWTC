@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./proto";
+
+service Passport {
+  rpc ParseJwt(Request) returns (Result) {}
+}
+
+message Request {
+  string token = 1;
+}
+
+message Result {
+  Claims claims = 1;
+  bool Valid = 2;
+}
+
+message Claims {
+  string id = 1;
+  string xh = 2;
+}
