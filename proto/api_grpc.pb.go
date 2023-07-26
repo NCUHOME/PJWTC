@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Passport_ParseJwt_FullMethodName = "/proto.Passport/ParseJwt"
+	Passport_GenToken_FullMethodName = "/proto.Passport/GenToken"
 )
 
 // PassportClient is the client API for Passport service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PassportClient interface {
 	ParseJwt(ctx context.Context, in *RequestParseJwt, opts ...grpc.CallOption) (*ParseJwtResult, error)
+	GenToken(ctx context.Context, in *RequestGenToken, opts ...grpc.CallOption) (*GenTokenResult, error)
 }
 
 type passportClient struct {
@@ -46,11 +48,21 @@ func (c *passportClient) ParseJwt(ctx context.Context, in *RequestParseJwt, opts
 	return out, nil
 }
 
+func (c *passportClient) GenToken(ctx context.Context, in *RequestGenToken, opts ...grpc.CallOption) (*GenTokenResult, error) {
+	out := new(GenTokenResult)
+	err := c.cc.Invoke(ctx, Passport_GenToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PassportServer is the server API for Passport service.
 // All implementations must embed UnimplementedPassportServer
 // for forward compatibility
 type PassportServer interface {
 	ParseJwt(context.Context, *RequestParseJwt) (*ParseJwtResult, error)
+	GenToken(context.Context, *RequestGenToken) (*GenTokenResult, error)
 	mustEmbedUnimplementedPassportServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedPassportServer struct {
 
 func (UnimplementedPassportServer) ParseJwt(context.Context, *RequestParseJwt) (*ParseJwtResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseJwt not implemented")
+}
+func (UnimplementedPassportServer) GenToken(context.Context, *RequestGenToken) (*GenTokenResult, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenToken not implemented")
 }
 func (UnimplementedPassportServer) mustEmbedUnimplementedPassportServer() {}
 
@@ -92,6 +107,24 @@ func _Passport_ParseJwt_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Passport_GenToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestGenToken)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PassportServer).GenToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Passport_GenToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PassportServer).GenToken(ctx, req.(*RequestGenToken))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Passport_ServiceDesc is the grpc.ServiceDesc for Passport service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var Passport_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ParseJwt",
 			Handler:    _Passport_ParseJwt_Handler,
+		},
+		{
+			MethodName: "GenToken",
+			Handler:    _Passport_GenToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
