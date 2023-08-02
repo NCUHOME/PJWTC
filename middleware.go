@@ -2,6 +2,7 @@ package pjwt
 
 import (
 	"context"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/ncuhome/PJWTC/proto"
 	"google.golang.org/grpc"
@@ -47,7 +48,7 @@ func (a *Middleware) Handler() gin.HandlerFunc {
 			Token: token,
 		})
 		if err != nil {
-			if err == grpc.ErrServerStopped {
+			if errors.Is(err, grpc.ErrServerStopped) {
 				a.handlers.ServerError(c, err)
 			} else {
 				a.handlers.ParseError(c, err)
