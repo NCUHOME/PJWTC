@@ -2,6 +2,8 @@
 
 passport jwt 解析中间件
 
+此仓库为 Gin 中间件版本，另有 Kratos 中间件：[PJWTC-Kratos](https://github.com/ncuhome/PJWTC-Kratos)
+
 proto 更新重新生成命令:
 
 ```shell
