@@ -1,14 +1,6 @@
 # PJWTC
 
-passport jwt 解析中间件
-
-此仓库为 Gin 中间件版本，另有 Kratos 中间件：[PJWTC-Kratos](https://github.com/ncuhome/PJWTC-Kratos)
-
-proto 更新重新生成命令:
-
-```shell
-protoc --go_out=. --go-grpc_out=. ./proto/api.proto
-```
+passport jwt 解析 Gin 中间件
 
 ### 使用中间件
 
@@ -22,7 +14,7 @@ package middlewares
 import (
     "github.com/gin-gonic/gin"
     pjwt "github.com/ncuhome/PJWTC"
-	"log"
+    "log"
 )
 
 func Auth() gin.HandlerFunc {
