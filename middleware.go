@@ -6,7 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	proto "github.com/ncuhome/PJWT-Protos"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 	"strings"
 )
 
@@ -48,7 +50,7 @@ func (a *Middleware) Handler() gin.HandlerFunc {
 			Token: token,
 		})
 		if err != nil {
-			if errors.Is(err, grpc.ErrServerStopped) {
+			if errors.Is(err, grpc.ErrServerStopped) || status.Code(err) != codes.Aborted {
 				a.handlers.ServerError(c, err)
 			} else {
 				a.handlers.ParseError(c, err)
