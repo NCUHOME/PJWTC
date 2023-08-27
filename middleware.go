@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
+	"strconv"
 	"strings"
 )
 
@@ -17,7 +18,7 @@ type Handlers struct {
 	// err 可能为 nil
 	ParseError  func(c *gin.Context, err error)
 	ServerError func(c *gin.Context, err error)
-	Success     func(c *gin.Context, xh string)
+	Success     func(c *gin.Context, uid uint64, xh string)
 }
 
 func New(handlers Handlers) (*Middleware, error) {
@@ -63,6 +64,12 @@ func (a *Middleware) Handler() gin.HandlerFunc {
 			return
 		}
 
-		a.handlers.Success(c, result.Claims.Xh)
+		uid, err := strconv.ParseUint(result.Claims.Id, 10, 64)
+		if err != nil {
+			a.handlers.ServerError(c, err)
+			return
+		}
+
+		a.handlers.Success(c, uid, result.Claims.Xh)
 	}
 }
