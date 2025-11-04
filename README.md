@@ -16,7 +16,7 @@ import (
 )
 
 func Auth() gin.HandlerFunc {
-	middleware, e := pjwt.New(pjwt.Handlers{
+	middleware, err := pjwt.New(pjwt.Handlers{
 		ParseError: func(c *gin.Context, err error) {
 			c.AbortWithStatus(401)
 		},
@@ -27,8 +27,8 @@ func Auth() gin.HandlerFunc {
 			c.Set("xh", xh)
 		},
 	})
-	if e != nil {
-		log.Fatalln("初始化鉴权中间件失败:", e)
+	if err != nil {
+		log.Fatalln("初始化鉴权中间件失败:", err)
 	}
 	
 	return middleware.Handler()
