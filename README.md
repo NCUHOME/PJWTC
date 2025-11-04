@@ -4,8 +4,6 @@ passport jwt 解析 Gin 中间件
 
 ### 使用中间件
 
-`$env:GOPRIVATE="github.com/ncuhome"`
-
 默认值使用集群内连接地址，如需覆盖，可以设置环境变量 `PJWT_ADDR`
 
 ```go
